@@ -35,8 +35,8 @@ def lstm(features, labels, dropout, neurons, dense_units, technicals):
     n_outputs = tf.shape(labels)[1]
     # cells = layers.StackedRNNCells([layers.LSTMCell(cell_size) for _ in range(num_layers)])
     model = tf.keras.Sequential()
-    #model.add(layers.LSTM(neurons, input_shape=(features.shape[1], features.shape[2])))
-    model.add(layers.LSTM(neurons, input_shape=(22, 27)))
+    model.add(layers.LSTM(neurons, input_shape=(features.shape[1], features.shape[2])))
+    # model.add(layers.LSTM(neurons, input_shape=(22, 27)))
     model.add(layers.Dropout(rate=dropout))
     model.add(layers.Activation(activation=tf.sigmoid))
     model.add(layers.Dense(dense_units, activation=tf.nn.selu))
