@@ -11,23 +11,42 @@ from sklearn.metrics import mean_absolute_error
 
 
 def rnn(features, labels, dropout, num_layers, cell_size, dense_units, technicals):
+    '''
     batch_size = tf.shape(features)[0]
     n_outputs = tf.shape(labels)[1]
     initial_state = tf.zeros([batch_size, num_layers * cell_size])
     
     # RNN
     cells = layers.StackedRNNCells([layers.GRUCell(cell_size) for _ in range(num_layers)])
-    rnn_output = layers.RNN(cells, features, initial_state=initial_state) 
+    rnn_layer = layers.RNN(cells)
+    rnn_output = rnn_layer(features, initial_state=initial_state) 
     
     # Dropout
-    dropout = layers.Dropout(rnn_output[:,-1], keep_prob=1-dropout)
+    dropout = layers.Dropout(rate=dropout)
+    dropout_output = dropout(rnn_output)
     
     # Dense Layers
-    dense_layer = layers.Dense(dropout, dense_units, activation=tf.nn.selu)
-    preds = tf.layers.Dense(dense_layer,n_outputs,activation=tf.sigmoid)
-    return preds
+    dense_layer = layers.Dense(dense_units, activation=tf.nn.selu)
+    dense_layer_output = dense_layer(dropout_output)
 
+    final = layers.Dense(n_outputs,activation=tf.sigmoid)
+    final_output = final(dense_layer_output)
+    '''
+    batch_size = tf.shape(features)[0]
+    n_outputs = tf.shape(labels)[1]
+    cells = layers.StackedRNNCells([layers.GRUCell(cell_size) for _ in range(num_layers)])
+    
+    model = tf.keras.Sequential()
+    model.add(layers.RNN(cells))
+    model.add(layers.Dropout(rate=dropout))
+    model.add(layers.Activation(activation=tf.sigmoid))
+    model.add(layers.Dense(dense_units, activation=tf.nn.tanh))
+    model.add(layers.Dense(n_outputs,activation=tf.sigmoid))
+    
+    model.compile(optimizer='adam', loss='mse')
+    return model
 
+'''
 def lstm(features, labels, dropout, num_layers, cell_size, dense_units, technicals):
     batch_size = tf.shape(features)[0]
     n_outputs = tf.shape(labels)[1]
@@ -35,7 +54,7 @@ def lstm(features, labels, dropout, num_layers, cell_size, dense_units, technica
     
     # RNN
     cells = layers.StackedRNNCells([layers.LSTMCell(cell_size) for _ in range(num_layers)])
-    rnn_output = layers.RNN(cells, features, initial_state=initial_state) 
+    rnn_output = layers.RNN(cells, features)(initial_state=initial_state) 
     
     # Dropout
     dropout = layers.Dropout(rnn_output[:,-1], keep_prob=1-dropout)
@@ -44,4 +63,5 @@ def lstm(features, labels, dropout, num_layers, cell_size, dense_units, technica
     dense_layer = layers.Dense(dropout, dense_units, activation=tf.nn.selu)
     preds = tf.layers.Dense(dense_layer,n_outputs,activation=tf.sigmoid)
     return preds
+'''
 
