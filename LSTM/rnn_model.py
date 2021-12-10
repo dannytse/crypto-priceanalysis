@@ -34,12 +34,9 @@ def rnn(features, labels, dropout, num_layers, cell_size, dense_units, technical
     '''
     batch_size = tf.shape(features)[0]
     n_outputs = tf.shape(labels)[1]
-    cells = layers.StackedRNNCells([layers.LSTMCell(cell_size) for _ in range(num_layers)])
+    cells = layers.StackedRNNCells([layers.GRUCell(cell_size) for _ in range(num_layers)])
     
     model = tf.keras.Sequential()
-    model.add(layers.RNN(cells))
-    model.add(layers.Dropout(rate=dropout))
-    model.add(layers.Activation(activation=tf.sigmoid))
     model.add(layers.RNN(cells))
     model.add(layers.Dropout(rate=dropout))
     model.add(layers.Activation(activation=tf.sigmoid))

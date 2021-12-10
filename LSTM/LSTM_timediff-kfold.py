@@ -38,13 +38,15 @@ def get_data():
     #convert coin to one-hot vectors
     for coin in coins:
         df[coin] = df['coin'] == coin
-    return coin
+    return df, coins
+
+def preprocess():   
+    return
     
-
 def main():
-    # Replace with your own path
-        
 
+    # Preprocess        
+    df, coins = get_data()
     train_data = pd.DataFrame(columns=df.columns)
     test_data = pd.DataFrame(columns=df.columns)
     for coin in coins:
