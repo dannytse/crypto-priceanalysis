@@ -40,7 +40,7 @@ def rnn(features, labels, dropout, num_layers, cell_size, dense_units, technical
     model.add(layers.RNN(cells))
     model.add(layers.Dropout(rate=dropout))
     model.add(layers.Activation(activation=tf.sigmoid))
-    model.add(layers.Dense(dense_units, activation=tf.nn.tanh))
+    model.add(layers.Dense(dense_units, activation=tf.nn.selu))
     model.add(layers.Dense(n_outputs,activation=None))
     
     model.compile(optimizer='adam', loss='mse')

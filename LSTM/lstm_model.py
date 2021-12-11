@@ -39,7 +39,7 @@ def lstm(features, labels, dropout, neurons, dense_units, technicals):
     # model.add(layers.LSTM(neurons, input_shape=(22, 27)))
     model.add(layers.Dropout(rate=dropout))
     model.add(layers.Activation(activation=tf.sigmoid))
-    model.add(layers.Dense(dense_units, activation=tf.nn.tanh))
+    model.add(layers.Dense(dense_units, activation=tf.nn.selu))
     model.add(layers.Dense(n_outputs,activation=tf.sigmoid))
     
     model.compile(optimizer='adam', loss='mse')
